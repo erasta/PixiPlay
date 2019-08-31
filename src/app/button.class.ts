@@ -1,5 +1,3 @@
-// import { Sprite, Texture, loader } from 'pixi.js';
-
 export class Button {
     obj: PIXI.Container;
     message: PIXI.Text;
