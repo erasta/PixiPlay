@@ -10,7 +10,7 @@ import * as particles from 'pixi-particles-latest';
 export class FireScene extends Scene {
 
     // currTime: number = 0;
-    emitter:particles. Emitter;
+    emitter: particles.Emitter;
 
     constructor() {
         super("fire");
@@ -27,90 +27,58 @@ export class FireScene extends Scene {
             this.container,
 
             // The collection of particle images to use
-            [PIXI.Texture.fromImage('assets/blob.png')],
+            [
+                PIXI.Texture.from('assets/fire.png'),
+                PIXI.Texture.from('assets/particle.png'),
+                PIXI.Texture.from('assets/smokeparticle.png')
+            ],
 
             // Emitter configuration, edit this to change the look
             // of the emitter
+
             {
-                alpha: {
-                    list: [
-                        {
-                            value: 0.8,
-                            time: 0
-                        },
-                        {
-                            value: 0.1,
-                            time: 1
-                        }
-                    ],
-                    isStepped: false
+                "alpha": {
+                    "start": 0.62,
+                    "end": 0
                 },
-                scale: {
-                    list: [
-                        {
-                            value: 1,
-                            time: 0
-                        },
-                        {
-                            value: 0.3,
-                            time: 1
-                        }
-                    ],
-                    isStepped: false
+                "scale": {
+                    "start": 0.25,
+                    "end": 0.75
                 },
-                color: {
-                    list: [
-                        {
-                            value: "fb1010",
-                            time: 0
-                        },
-                        {
-                            value: "f5b830",
-                            time: 1
-                        }
-                    ],
-                    isStepped: false
+                "color": {
+                    "start": "fff191",
+                    "end": "ff622c"
                 },
-                speed: {
-                    list: [
-                        {
-                            value: 200,
-                            time: 0
-                        },
-                        {
-                            value: 100,
-                            time: 1
-                        }
-                    ],
-                    isStepped: false
+                "speed": {
+                    "start": 500,
+                    "end": 200
                 },
-                startRotation: {
-                    min: 0,
-                    max: 360
+                "startRotation": {
+                    "min": 265,
+                    "max": 275
                 },
-                rotationSpeed: {
-                    min: 0,
-                    max: 0
+                "rotationSpeed": {
+                    "min": 50,
+                    "max": 50
                 },
-                lifetime: {
-                    min: 0.5,
-                    max: 0.5
+                "lifetime": {
+                    "min": 0.1,
+                    "max": 0.75
                 },
-                frequency: 0.008,
-                spawnChance: 1,
-                particlesPerWave: 1,
-                emitterLifetime: 0.31,
-                maxParticles: 1000,
-                pos: {
+                "blendMode": "normal",
+                "frequency": 0.001,
+                "emitterLifetime": 0,
+                "maxParticles": 1000,
+                "pos": {
                     x: window.innerWidth / 2,
                     y: window.innerHeight / 2
                 },
-                addAtBack: false,
-                spawnType: "circle",
-                spawnCircle: {
-                    x: 0,
-                    y: 0,
-                    r: 10
+                "addAtBack": false,
+                "spawnType": "circle",
+                "spawnCircle": {
+                    "x": 0,
+                    "y": 0,
+                    "r": 17
                 }
             }
         );
