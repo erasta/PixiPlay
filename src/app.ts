@@ -1,4 +1,4 @@
-import { Application, loader, Container } from 'pixi.js';
+import { Application, loader, Container, Sprite, Point } from 'pixi.js';
 import { Button } from '@app/button.class';
 
 class Scene {
@@ -6,7 +6,7 @@ class Scene {
     name: string;
     container: Container = new PIXI.Container();
     setup(): void { }
-    tick(delta: number): void {delta; };
+    tick(): void { };
     constructor(theGame: Game, theName: string) {
         this.game = theGame;
         this.name = theName;
@@ -27,28 +27,58 @@ class ButtonsScene extends Scene {
     }
 }
 
+class Card {
+    sprite: Sprite;
+    start: Point;
+    target: Point;
+    startTime: number;
+    constructor(id: number, num: number) {
+        const val = id < 10 ? `0${id}` : id;
+        this.sprite = new Sprite(PIXI.Texture.from(`rollSequence00${val}.png`));
+        this.sprite.width = 50;
+        this.sprite.height = 70;
+        this.start = new Point(num * 2 + 100, num * 5 + 50);
+        this.target = new Point((143 - num) * 2 + 500, (143 - num) * 5 + 50);
+        this.startTime = num;
+        this.sprite.position.copy(this.start);
+    }
+
+    move(currTime: number) {
+        const t = (currTime - this.startTime) / 2;
+        if (t < 0 || t > 1) return;
+        this.sprite.position.set(this.start.x + t * (this.target.x - this.start.x), this.start.y + t * (this.target.y - this.start.y));
+    }
+}
+
 class CardsScene extends Scene {
+
+    cards: Card[];
+    currTime: number = 0;
 
     constructor(game: Game) {
         super(game, "cards");
     }
 
     setup(): void {
-        const sprites = [];
-        for (let i = 0; i < 30; i++) {
-            const val = i < 10 ? `0${i}` : i;
-            const sprite = new PIXI.Sprite(PIXI.Texture.from(`rollSequence00${val}.png`));
-            sprite.position.set(i * 5, i * 10);
-            sprites.push(this.container.addChild(sprite));
+        this.cards = [];
+        for (let i = 0; i < 144; i++) {
+            const card = new Card(Math.floor(Math.random() * 30), i);
+            this.cards.push(card);
+            this.container.addChild(card.sprite);
         }
         this.container.addChild(new Button("Back", 50, 0, () => { this.game.changeScene("buttons"); }).obj);
+    }
+
+    tick(): void {
+        this.currTime += this.game.app.ticker.elapsedMS / 1000.0;
+        this.cards.forEach(c => c.move(this.currTime));
     }
 }
 
 class Game {
-    private app: Application;
-    private scenes: Scene[];
-    private currScene: Scene;
+    app: Application;
+    scenes: Scene[];
+    currScene: Scene;
 
     constructor() {
         // instantiate app
@@ -96,25 +126,10 @@ class Game {
 
         this.changeScene("buttons");
 
-        // append hero
-        // const hero = new Character(loader.resources['samir'].texture);
-        // const heroSprite = hero.sprite;
-        // this.app.stage.addChild(heroSprite);
-        // heroSprite.y = 300;
-
-        // //  animate hero
-        // let moveLeft = true;
         this.app.ticker.add(() => {
             fps.text = 'FPS: ' + (Math.round(this.app.ticker.FPS * 10000) / 10000).toString();
 
-            this.currScene;
-            //     const speed = 2;
-            //     if (heroSprite.x < this.app.view.width && moveLeft) {
-            //         heroSprite.x += speed;
-            //     } else {
-            //         heroSprite.x -= speed;
-            //         moveLeft = heroSprite.x <= 0;
-            //     }
+            this.currScene.tick();
         });
     }
 }
