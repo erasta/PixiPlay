@@ -15,16 +15,18 @@ class TextFusion {
     container: Container = new Container();
     texts: PIXI.Text[] = [];
     images: PIXI.Sprite[] = [];
+    width: number;
 
     show(mix: TextMix[], size: number) {
         let textIndex = -1;
         let imageIndex = -1;
-        let xpos = 0;
+        this.width = 0;
         mix.forEach(m => {
             if (m.isImage) {
 
                 imageIndex++;
                 const tex = PIXI.Texture.from(m.content);
+                const ratio = tex.width / tex.height;
                 if (imageIndex >= this.images.length) {
                     const currImage = new PIXI.Sprite(tex);
                     this.images.push(currImage);
@@ -33,10 +35,10 @@ class TextFusion {
                     this.images[imageIndex].texture = tex;
                     this.images[imageIndex].visible = true;
                 }
-                this.images[imageIndex].width *= this.images[imageIndex].height ? size / this.images[imageIndex].height : 1;
+                this.images[imageIndex].width = size * ratio;
                 this.images[imageIndex].height = size;
-                this.images[imageIndex].x = xpos;
-                xpos += this.images[imageIndex].width + 10;
+                this.images[imageIndex].x = this.width;
+                this.width += this.images[imageIndex].width + 10;
 
             } else {
 
@@ -50,11 +52,14 @@ class TextFusion {
                     this.texts[textIndex].visible = true;
                 }
                 this.texts[textIndex].style.fontSize = size;
-                this.texts[textIndex].x = xpos;
-                xpos += this.texts[textIndex].width + 10;
+                this.texts[textIndex].x = this.width;
+                this.width += this.texts[textIndex].width + 10;
 
             }
         });
+        if (mix.length !== 0) {
+            this.width -= 10;
+        }
 
         for (textIndex++; textIndex < this.texts.length; textIndex++) {
             this.texts[textIndex].visible = false;
@@ -104,7 +109,7 @@ export class TextScene extends Scene {
         if (this.currTime - 2 < this.lastTime) return;
         this.lastTime = this.currTime;
         this.fusion.show(this.randMix(), Math.floor(Math.random() * 50) + 10);
-        this.fusion.container.x = window.innerWidth / 2 - this.fusion.container.width / 2;
+        this.fusion.container.x = window.innerWidth / 2 - this.fusion.width / 2;
         this.fusion.container.y = window.innerHeight / 2 - this.fusion.container.height / 2;
     }
 }
