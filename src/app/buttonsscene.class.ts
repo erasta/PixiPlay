@@ -10,7 +10,7 @@ export class ButtonsScene extends Scene {
     setup(): void {
         this.container.addChild(
             new Button("Cards", 100, 200, () => { this.game.changeScene("cards"); }).obj,
-            new Button("Text", 150, 200, () => { alert('Text') }).obj,
-            new Button("Fire", 200, 200, () => { alert('Fire') }).obj);
+            new Button("Text", 150, 200, () => { this.game.changeScene("text"); }).obj,
+            new Button("Fire", 200, 200, () => { this.game.changeScene("fire"); }).obj);
     }
 }
