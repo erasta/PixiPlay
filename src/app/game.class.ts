@@ -15,6 +15,12 @@ export class Game {
     app: Application;
     scenes: Scene[];
     currScene: Scene;
+    icons: string[] = [
+        "/assets/face.png",
+        "/assets/blob.png",
+        "/assets/cat.png",
+        "/assets/dollar.png"
+    ];
 
     constructor(theScenes: Scene[]) {
         this.scenes = theScenes;
@@ -35,6 +41,7 @@ export class Game {
 
         loader
             .add("/assets/fighter.json")
+            .add(this.icons)
             .load(this.setup.bind(this));
     }
 

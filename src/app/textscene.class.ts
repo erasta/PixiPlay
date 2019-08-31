@@ -11,22 +11,12 @@ class TextMix {
     }
 }
 
-// class ReusableArray<T> {
-//     index: number = -1;
-//     objects: T[] = [];
-//     reset(): ReusableArray<T> {
-//         this.index = -1;
-//         return this;
-//     }
-//     next():
-// }
-
 class TextFusion {
     container: Container = new Container();
     texts: PIXI.Text[] = [];
     images: PIXI.Sprite[] = [];
 
-    show(mix: TextMix[]) {//}, size: number) {
+    show(mix: TextMix[], size: number) {
         let textIndex = -1;
         let imageIndex = -1;
         let xpos = 0;
@@ -43,6 +33,8 @@ class TextFusion {
                     this.images[imageIndex].texture = tex;
                     this.images[imageIndex].visible = true;
                 }
+                this.images[imageIndex].width *= this.images[imageIndex].height ? size / this.images[imageIndex].height : 1;
+                this.images[imageIndex].height = size;
                 this.images[imageIndex].x = xpos;
                 xpos += this.images[imageIndex].width + 10;
 
@@ -57,6 +49,7 @@ class TextFusion {
                     this.texts[textIndex].text = m.content;
                     this.texts[textIndex].visible = true;
                 }
+                this.texts[textIndex].style.fontSize = size;
                 this.texts[textIndex].x = xpos;
                 xpos += this.texts[textIndex].width + 10;
 
@@ -97,7 +90,7 @@ export class TextScene extends Scene {
         if (Math.random() < 0.5) {
             return new TextMix(false, this.randText());
         } else {
-            return new TextMix(true, "/assets/cat.png");
+            return new TextMix(true, this.game.icons[Math.floor(Math.random() * this.game.icons.length)]);
         }
     }
 
@@ -110,7 +103,7 @@ export class TextScene extends Scene {
         this.currTime += this.game.app.ticker.elapsedMS / 1000.0;
         if (this.currTime - 2 < this.lastTime) return;
         this.lastTime = this.currTime;
-        this.fusion.show(this.randMix());//, 10);
+        this.fusion.show(this.randMix(), Math.floor(Math.random() * 50) + 10);
         this.fusion.container.x = window.innerWidth / 2 - this.fusion.container.width / 2;
         this.fusion.container.y = window.innerHeight / 2 - this.fusion.container.height / 2;
     }
