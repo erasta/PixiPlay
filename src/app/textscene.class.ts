@@ -17,24 +17,23 @@ class TextFusion {
     images: PIXI.Sprite[] = [];
 
     show(mix: TextMix[]) {//}, size: number) {
-        // this.container.removeChildren();
         let textIndex = -1;
-        console.log(textIndex, '-', this.texts.length);
+        let xpos = 0;
         mix.forEach(m => {
             if (m.isImage) {
 
             } else {
                 textIndex++;
                 if (textIndex >= this.texts.length) {
-                    console.log('new');
                     const currText = new PIXI.Text(m.content);
                     this.texts.push(currText);
                     this.container.addChild(currText);
                 } else {
-                    console.log('reuse');
                     this.texts[textIndex].text = m.content;
                     this.texts[textIndex].visible = true;
                 }
+                this.texts[textIndex].x = xpos;
+                xpos += this.texts[textIndex].width + 10;
             }
         });
         for (textIndex++; textIndex < this.texts.length; textIndex++) {
@@ -64,12 +63,21 @@ export class TextScene extends Scene {
         return (Math.floor(Math.random() * 10000) / 100).toString();
     }
 
+    randMixItem(): TextMix {
+        return new TextMix(false, this.randText());
+    }
+
+    randMix(): TextMix[] {
+        const num = Math.floor(Math.random() * 10);
+        return new Array(num).fill(0).map(() => { return this.randMixItem(); });
+    }
+
     tick(): void {
         this.currTime += this.game.app.ticker.elapsedMS / 1000.0;
         if (this.currTime - 2 < this.lastTime) return;
         this.lastTime = this.currTime;
-        this.fusion.show([new TextMix(false, this.randText())]);//, 10);
-        this.fusion.container.x = this.game.app.stage.width / 2 - this.fusion.container.width / 2;
-        this.fusion.container.y = this.game.app.stage.height / 2 - this.fusion.container.height / 2;
+        this.fusion.show(this.randMix());//, 10);
+        this.fusion.container.x = window.innerWidth / 2 - this.fusion.container.width / 2;
+        this.fusion.container.y = window.innerHeight / 2 - this.fusion.container.height / 2;
     }
 }
