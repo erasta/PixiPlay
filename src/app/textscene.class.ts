@@ -11,6 +11,16 @@ class TextMix {
     }
 }
 
+// class ReusableArray<T> {
+//     index: number = -1;
+//     objects: T[] = [];
+//     reset(): ReusableArray<T> {
+//         this.index = -1;
+//         return this;
+//     }
+//     next():
+// }
+
 class TextFusion {
     container: Container = new Container();
     texts: PIXI.Text[] = [];
@@ -18,11 +28,26 @@ class TextFusion {
 
     show(mix: TextMix[]) {//}, size: number) {
         let textIndex = -1;
+        let imageIndex = -1;
         let xpos = 0;
         mix.forEach(m => {
             if (m.isImage) {
 
+                imageIndex++;
+                const tex = PIXI.Texture.from(m.content);
+                if (imageIndex >= this.images.length) {
+                    const currImage = new PIXI.Sprite(tex);
+                    this.images.push(currImage);
+                    this.container.addChild(currImage);
+                } else {
+                    this.images[imageIndex].texture = tex;
+                    this.images[imageIndex].visible = true;
+                }
+                this.images[imageIndex].x = xpos;
+                xpos += this.images[imageIndex].width + 10;
+
             } else {
+
                 textIndex++;
                 if (textIndex >= this.texts.length) {
                     const currText = new PIXI.Text(m.content);
@@ -34,10 +59,15 @@ class TextFusion {
                 }
                 this.texts[textIndex].x = xpos;
                 xpos += this.texts[textIndex].width + 10;
+
             }
         });
+
         for (textIndex++; textIndex < this.texts.length; textIndex++) {
             this.texts[textIndex].visible = false;
+        }
+        for (imageIndex++; imageIndex < this.images.length; imageIndex++) {
+            this.images[imageIndex].visible = false;
         }
     }
 }
@@ -64,7 +94,11 @@ export class TextScene extends Scene {
     }
 
     randMixItem(): TextMix {
-        return new TextMix(false, this.randText());
+        if (Math.random() < 0.5) {
+            return new TextMix(false, this.randText());
+        } else {
+            return new TextMix(true, "/assets/cat.png");
+        }
     }
 
     randMix(): TextMix[] {
