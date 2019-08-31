@@ -16,7 +16,6 @@ class Game {
         this.app.renderer.view.style.position = "absolute";
         this.app.renderer.view.style.display = "block";
         this.app.renderer.autoResize = true;
-        // this.app.renderer.resize(window.innerWidth, window.innerHeight);
 
         // preload needed assets
         // loader.add('samir', '/assets/img/hero.png');
@@ -26,14 +25,16 @@ class Game {
     }
 
     setup(): void {
-        const button = new Button("Hello Pixi!", 100, () => {alert('hello')});
-        // let roundBox = new PIXI.Graphics().lineStyle(4, 0x99CCFF, 1).beginFill(0xFF9933)
-        //     .drawRoundedRect(0, 0, message.width + 40, message.height + 6, 10)
-        //     .endFill();
-        // roundBox.position.set(window.innerWidth / 2 - roundBox.width / 2, 100);
-        // message.position.set(20,3);
-        // roundBox.addChild(message);
-        this.app.stage.addChild(button.obj);
+        const fps = new PIXI.Text('0.0', {fontSize:15, fill:'lightgreen'});
+        this.app.stage.addChild(fps);
+        const buttons = [
+            new Button("Cards", 100, 200, () => { alert('Cards') }),
+            new Button("Text", 150, 200, () => { alert('Text') }),
+            new Button("Fire", 200, 200, () => { alert('Fire') })
+        ];
+        buttons.forEach(button => {
+            this.app.stage.addChild(button.obj);
+        });
         // append hero
         // const hero = new Character(loader.resources['samir'].texture);
         // const heroSprite = hero.sprite;
@@ -42,7 +43,8 @@ class Game {
 
         // //  animate hero
         // let moveLeft = true;
-        // this.app.ticker.add(() => {
+        this.app.ticker.add(() => {
+            fps.text = 'FPS: ' + (Math.round(this.app.ticker.FPS * 10000) / 10000).toString();
         //     const speed = 2;
         //     if (heroSprite.x < this.app.view.width && moveLeft) {
         //         heroSprite.x += speed;
@@ -50,7 +52,7 @@ class Game {
         //         heroSprite.x -= speed;
         //         moveLeft = heroSprite.x <= 0;
         //     }
-        // });
+        });
     }
 }
 
