@@ -6,8 +6,7 @@ export class Scene {
     container: Container = new PIXI.Container();
     setup(): void { }
     tick(): void { };
-    constructor(theGame: Game, theName: string) {
-        this.game = theGame;
+    constructor(theName: string) {
         this.name = theName;
     }
 }
@@ -17,7 +16,9 @@ export class Game {
     scenes: Scene[];
     currScene: Scene;
 
-    constructor() {
+    constructor(theScenes: Scene[]) {
+        this.scenes = theScenes;
+
         // instantiate app
         this.app = new Application(window.innerWidth, window.innerHeight, {
             backgroundColor: 0x1099bb // light blue
@@ -31,9 +32,7 @@ export class Game {
         this.app.renderer.view.style.position = "absolute";
         this.app.renderer.view.style.display = "block";
         this.app.renderer.autoResize = true;
-    }
 
-    public init(): void {
         loader
             .add("/assets/fighter.json")
             .load(this.setup.bind(this));
@@ -53,6 +52,7 @@ export class Game {
         this.app.stage.addChild(fps);
 
         this.scenes.forEach(scene => {
+            scene.game = this;
             scene.setup();
             this.app.stage.addChild(scene.container);
         });

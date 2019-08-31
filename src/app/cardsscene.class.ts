@@ -1,6 +1,6 @@
 import { Sprite, Point } from 'pixi.js';
 import { Button } from '@app/button.class';
-import { Scene, Game } from './game.class';
+import { Scene } from './game.class';
 
 class Card {
     sprite: Sprite;
@@ -31,8 +31,8 @@ export class CardsScene extends Scene {
     cards: Card[];
     currTime: number = 0;
 
-    constructor(game: Game) {
-        super(game, "cards");
+    constructor() {
+        super("cards");
     }
 
     setup(): void {

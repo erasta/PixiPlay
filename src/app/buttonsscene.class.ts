@@ -1,10 +1,10 @@
 import { Button } from '@app/button.class';
-import { Game, Scene } from './game.class';
+import { Scene } from './game.class';
 
 export class ButtonsScene extends Scene {
 
-    constructor(game: Game) {
-        super(game, "buttons");
+    constructor() {
+        super("buttons");
     }
 
     setup(): void {
