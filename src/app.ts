@@ -21,20 +21,34 @@ class Game {
         // loader.add('samir', '/assets/img/hero.png');
 
         // then launch app
-        loader.load(this.setup.bind(this));
+        loader
+            .add("/assets/fighter.json")
+            .load(this.setup.bind(this));
     }
 
     setup(): void {
-        const fps = new PIXI.Text('0.0', {fontSize:15, fill:'lightgreen'});
+        const fps = new PIXI.Text('0.0', { fontSize: 15, fill: 'lightgreen' });
         this.app.stage.addChild(fps);
-        const buttons = [
-            new Button("Cards", 100, 200, () => { alert('Cards') }),
-            new Button("Text", 150, 200, () => { alert('Text') }),
-            new Button("Fire", 200, 200, () => { alert('Fire') })
-        ];
-        buttons.forEach(button => {
-            this.app.stage.addChild(button.obj);
-        });
+        const buttons = new PIXI.Container()
+        buttons.addChild(
+            new Button("Cards", 100, 200, () => { buttons.visible = false; cards.visible = true; }).obj,
+            new Button("Text", 150, 200, () => { alert('Text') }).obj,
+            new Button("Fire", 200, 200, () => { alert('Fire') }).obj);
+        this.app.stage.addChild(buttons);
+
+        const cards = new PIXI.Container();
+        const sprites = [];
+        for (let i = 0; i < 30; i++) {
+            const val = i < 10 ? `0${i}` : i;
+            const sprite = new PIXI.Sprite(PIXI.Texture.from(`rollSequence00${val}.png`));
+            sprite.position.set(i * 5, i * 10);
+            sprites.push(cards.addChild(sprite));
+        }
+        cards.addChild(new Button("Back", 50, 0, () => { buttons.visible = true; cards.visible = false; }).obj);
+        cards.visible = false;
+        this.app.stage.addChild(cards);
+
+
         // append hero
         // const hero = new Character(loader.resources['samir'].texture);
         // const heroSprite = hero.sprite;
@@ -45,13 +59,13 @@ class Game {
         // let moveLeft = true;
         this.app.ticker.add(() => {
             fps.text = 'FPS: ' + (Math.round(this.app.ticker.FPS * 10000) / 10000).toString();
-        //     const speed = 2;
-        //     if (heroSprite.x < this.app.view.width && moveLeft) {
-        //         heroSprite.x += speed;
-        //     } else {
-        //         heroSprite.x -= speed;
-        //         moveLeft = heroSprite.x <= 0;
-        //     }
+            //     const speed = 2;
+            //     if (heroSprite.x < this.app.view.width && moveLeft) {
+            //         heroSprite.x += speed;
+            //     } else {
+            //         heroSprite.x -= speed;
+            //         moveLeft = heroSprite.x <= 0;
+            //     }
         });
     }
 }
