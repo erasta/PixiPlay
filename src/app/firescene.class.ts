@@ -9,7 +9,7 @@ import * as particles from 'pixi-particles-latest';
 
 export class FireScene extends Scene {
 
-    // currTime: number = 0;
+    currTime: number = 0;
     emitter: particles.Emitter;
 
     constructor() {
@@ -70,15 +70,15 @@ export class FireScene extends Scene {
                 "emitterLifetime": 0,
                 "maxParticles": 1000,
                 "pos": {
-                    x: window.innerWidth / 2,
-                    y: window.innerHeight / 2
+                    x: 0,
+                    y: 0
                 },
                 "addAtBack": false,
                 "spawnType": "circle",
                 "spawnCircle": {
                     "x": 0,
                     "y": 0,
-                    "r": 17
+                    "r": 12
                 }
             }
         );
@@ -88,7 +88,9 @@ export class FireScene extends Scene {
     }
 
     tick(): void {
-        // this.currTime += this.game.app.ticker.elapsedMS / 1000.0;
+        this.currTime += this.game.app.ticker.elapsedMS / 1000.0;
         this.emitter.update(this.game.app.ticker.elapsedMS / 1000.0);
+        this.emitter.spawnPos.x = window.innerWidth / 2 + Math.cos(this.currTime / 2) * 100;
+        this.emitter.spawnPos.y = window.innerHeight / 2 + Math.sin(this.currTime / 2) * 100;
     }
 }
