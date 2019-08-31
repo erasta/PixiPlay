@@ -5,6 +5,7 @@ export class Scene {
     name: string;
     container: Container = new PIXI.Container();
     setup(): void { }
+    reset(): void { }
     tick(): void { };
     constructor(theName: string) {
         this.name = theName;
@@ -46,12 +47,9 @@ export class Game {
     }
 
     public changeScene(sceneName: string): void {
-        this.scenes.forEach(scene => {
-            scene.container.visible = scene.name === sceneName;
-            if (scene.container.visible) {
-                this.currScene = scene;
-            }
-        });
+        this.scenes.forEach(scene => scene.container.visible = scene.name === sceneName);
+        this.currScene = this.scenes.find(scene => scene.container.visible);
+        this.currScene.reset();
     }
 
     setup(): void {

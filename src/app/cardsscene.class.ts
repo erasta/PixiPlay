@@ -12,8 +12,8 @@ class Card {
         this.sprite = new Sprite(PIXI.Texture.from(`rollSequence00${val}.png`));
         this.sprite.width = 50;
         this.sprite.height = 70;
-        this.start = new Point(num * 2 + 100, num * 5 + 50);
-        this.target = new Point((143 - num) * 2 + 500, (143 - num) * 5 + 50);
+        this.start = new Point(num * 1 + 500, num * 5 + 50);
+        this.target = new Point((143 - num) * 1 + 100, (143 - num) * 5 + 50);
         this.startTime = num;
         this.sprite.position.copy(this.start);
     }
@@ -36,6 +36,7 @@ export class CardsScene extends Scene {
     }
 
     setup(): void {
+        this.currTime = 0;
         this.cards = [];
         for (let i = 0; i < 144; i++) {
             const card = new Card(Math.floor(Math.random() * 30), i);
@@ -43,6 +44,11 @@ export class CardsScene extends Scene {
             this.container.addChild(card.sprite);
         }
         this.container.addChild(new Button("Back", 50, 0, () => { this.game.changeScene("buttons"); }).obj);
+    }
+
+    reset() {
+        this.container.removeChildren();
+        this.setup();
     }
 
     tick(): void {
