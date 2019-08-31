@@ -16,10 +16,10 @@ export class Game {
     scenes: Scene[];
     currScene: Scene;
     icons: string[] = [
-        "/assets/face.png",
-        "/assets/blob.png",
-        "/assets/cat.png",
-        "/assets/dollar.png"
+        "assets/face.png",
+        "assets/blob.png",
+        "assets/cat.png",
+        "assets/dollar.png"
     ];
 
     constructor(theScenes: Scene[]) {
@@ -40,7 +40,7 @@ export class Game {
         this.app.renderer.autoResize = true;
 
         loader
-            .add("/assets/fighter.json")
+            .add("assets/fighter.json")
             .add(this.icons)
             .load(this.setup.bind(this));
     }
