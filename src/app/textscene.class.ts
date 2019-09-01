@@ -75,9 +75,13 @@ export class TextScene extends Scene {
     currTime: number = 0;
     lastTime: number = -1000;
     fusion: TextFusion;
+    loremIpsum: string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vulputate justo ac velit maximus tincidunt. Integer id varius orci, nec feugiat tellus. Nunc lacus ex, posuere in est nec, euismod rhoncus dui. Ut at hendrerit lectus. Fusce maximus ipsum vel aliquet fermentum. Sed eu eros ut urna iaculis pellentesque. Praesent euismod egestas dignissim. Etiam commodo, nisl interdum sodales ultricies, erat odio lacinia purus, in ullamcorper dolor neque eget nisl. Cras sit amet erat nisl. Praesent ultrices lacus sed leo facilisis, non vestibulum elit ullamcorper. Nullam et commodo elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Praesent sed.";
+    words: string[];
 
     constructor() {
         super("text");
+        this.words = this.loremIpsum.split(/[ ,.?]/).filter(w => w.length > 0);
+        console.log(this.words);
     }
 
     setup(): void {
@@ -88,7 +92,11 @@ export class TextScene extends Scene {
     }
 
     randText(): string {
-        return (Math.floor(Math.random() * 10000) / 100).toString();
+        if (Math.random() < 0.3) {
+            return (Math.floor(Math.random() * 10000) / 100).toString();
+        } else {
+            return this.words[Math.floor(Math.random() * this.words.length)];
+        }
     }
 
     randMixItem(): TextMix {
@@ -100,7 +108,7 @@ export class TextScene extends Scene {
     }
 
     randMix(): TextMix[] {
-        const num = Math.floor(Math.random() * 10);
+        const num = Math.floor(Math.random() * 7 + 2);
         return new Array(num).fill(0).map(() => { return this.randMixItem(); });
     }
 
