@@ -7,13 +7,16 @@ class Card {
     start: Point;
     target: Point;
     startTime: number;
-    constructor(id: number, num: number) {
-        const val = id < 10 ? `0${id}` : id;
-        this.sprite = new Sprite(PIXI.Texture.from(`rollSequence00${val}.png`));
+    constructor(name: string, num: number) {
+        // const val = id < 10 ? `0${id}` : id;
+        // this.sprite = new Sprite(PIXI.Texture.from(`rollSequence00${val}.png`));
+        this.sprite = new Sprite(PIXI.Texture.from(name));
+        this.sprite.tint = Math.random() * 0xFFFFFF;
+
         this.sprite.width = 50;
         this.sprite.height = 70;
-        this.start = new Point(num * 1 + 500, num * 5 + 50);
-        this.target = new Point((143 - num) * 1 + 100, (143 - num) * 5 + 50);
+        this.start = new Point(num * 1 + window.innerWidth * 0.75 - 72, num * 5 + 50);
+        this.target = new Point((143 - num) * 1 + window.innerWidth * 0.25 - 72, (143 - num) * 5 + 50);
         this.startTime = num;
         this.sprite.position.copy(this.start);
     }
@@ -30,6 +33,12 @@ export class CardsScene extends Scene {
 
     cards: Card[];
     currTime: number = 0;
+    names: string[] = [
+        "eggHead.png",
+        "flowerTop.png",
+        "helmlok.png",
+        "skully.png"
+    ];
 
     constructor() {
         super("cards");
@@ -39,7 +48,7 @@ export class CardsScene extends Scene {
         this.currTime = 0;
         this.cards = [];
         for (let i = 0; i < 144; i++) {
-            const card = new Card(Math.floor(Math.random() * 30), i);
+            const card = new Card(this.names[Math.floor(Math.random() * this.names.length)], i);
             this.cards.push(card);
             this.container.addChild(card.sprite);
         }

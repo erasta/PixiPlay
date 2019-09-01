@@ -41,7 +41,7 @@ export class Game {
         this.app.renderer.autoResize = true;
 
         loader
-            .add("assets/fighter.json")
+            .add("assets/monsters.json")
             .add(this.icons)
             .load(this.setup.bind(this));
     }
