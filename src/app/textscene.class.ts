@@ -81,7 +81,6 @@ export class TextScene extends Scene {
     constructor() {
         super("text");
         this.words = this.loremIpsum.split(/[ ,.?]/).filter(w => w.length > 0);
-        console.log(this.words);
     }
 
     setup(): void {
