@@ -24,11 +24,11 @@
   ],
   "dependencies": {
     "pixi-particles-latest": "^3.2.0",
-    "pixi.js": "4.7.1"
+    "pixi.js": "^4.8.8"
   },
   "devDependencies": {
     "@types/node": "9.6.0",
-    "@types/pixi.js": "4.7.2",
+    "@types/pixi.js": "^4.8.8",
     "awesome-typescript-loader": "5.0.0-1",
     "clean-webpack-plugin": "0.1.19",
     "copy-webpack-plugin": "4.5.1",
