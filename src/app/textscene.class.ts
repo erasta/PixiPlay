@@ -108,7 +108,7 @@ export class TextScene extends Scene {
         this.currTime += this.game.app.ticker.elapsedMS / 1000.0;
         if (this.currTime - 2 < this.lastTime) return;
         this.lastTime = this.currTime;
-        this.fusion.show(this.randMix(), Math.floor(Math.random() * 50) + 10);
+        this.fusion.show(this.randMix(), Math.floor(Math.random() * 80) + 10);
         this.fusion.container.x = window.innerWidth / 2 - this.fusion.width / 2;
         this.fusion.container.y = window.innerHeight / 2 - this.fusion.container.height / 2;
     }
