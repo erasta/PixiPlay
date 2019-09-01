@@ -2,11 +2,8 @@ import { Button } from '@app/button.class';
 import { Scene } from './game.class';
 /// <reference path="node_modules/pixi-particles/ambient.d.ts" />
 import * as particles from 'pixi-particles-latest';
-// import particles = require('pixi-particles');
-// require('pixi-particles');
 
-// import 'pixi-particles';
-
+// Showing a fire dancing in the middle of the screen using particles
 export class FireScene extends Scene {
 
     currTime: number = 0;
@@ -89,6 +86,8 @@ export class FireScene extends Scene {
     tick(): void {
         this.currTime += this.game.app.ticker.elapsedMS / 1000.0;
         this.emitter.update(this.game.app.ticker.elapsedMS / 1000.0);
+
+        // moving the fire in an infinity walk around the middle
         this.emitter.spawnPos.x = window.innerWidth / 2 + Math.cos(this.currTime / 2) * 100;
         this.emitter.spawnPos.y = window.innerHeight / 2 + Math.sin(this.currTime) * 50;
     }

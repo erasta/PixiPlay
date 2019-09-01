@@ -2,6 +2,7 @@ import { Button } from '@app/button.class';
 import { Scene } from './game.class';
 import { Container } from 'pixi.js';
 
+// Object which can be either text or image, to be aggregated in a list and given to TextFusion.
 class TextMix {
     isImage: boolean;
     content: string;
@@ -11,19 +12,24 @@ class TextMix {
     }
 }
 
+// Tool for showing concatenated images and text lists with font size normalizing
+// The tool reuses the sprites and text objects for less allocations
 class TextFusion {
     container: Container = new Container();
     texts: PIXI.Text[] = [];
     images: PIXI.Sprite[] = [];
     width: number;
 
-    show(mix: TextMix[], size: number) {
+    show(mix: TextMix[], fontSize: number) {
+
+        // Going over the mix of texts and images
         let textIndex = -1;
         let imageIndex = -1;
         this.width = 0;
         mix.forEach(m => {
             if (m.isImage) {
 
+                // When image: reusing sprite object with the texture if one exists or creating a new one
                 imageIndex++;
                 const tex = PIXI.Texture.from(m.content);
                 const ratio = tex.width / tex.height;
@@ -35,13 +41,18 @@ class TextFusion {
                     this.images[imageIndex].texture = tex;
                     this.images[imageIndex].visible = true;
                 }
-                this.images[imageIndex].width = size * ratio;
-                this.images[imageIndex].height = size;
+
+                // adjusting the image size to the fontSize
+                this.images[imageIndex].width = fontSize * ratio;
+                this.images[imageIndex].height = fontSize;
+
+                // accumulating the objects width for putting on the next one in correct position
                 this.images[imageIndex].x = this.width;
                 this.width += this.images[imageIndex].width + 10;
 
             } else {
 
+                // When text: reusing text object if one exists or creating a new one
                 textIndex++;
                 if (textIndex >= this.texts.length) {
                     const currText = new PIXI.Text(m.content);
@@ -51,16 +62,21 @@ class TextFusion {
                     this.texts[textIndex].text = m.content;
                     this.texts[textIndex].visible = true;
                 }
-                this.texts[textIndex].style.fontSize = size;
+
+                // accumulating the objects width for putting on the next one in correct position
+                this.texts[textIndex].style.fontSize = fontSize;
                 this.texts[textIndex].x = this.width;
                 this.width += this.texts[textIndex].width + 10;
 
             }
         });
+
+        // removing access width that was added to last object
         if (mix.length !== 0) {
             this.width -= 10;
         }
 
+        // changing all the remaining unused text and sprite object to invisible
         for (textIndex++; textIndex < this.texts.length; textIndex++) {
             this.texts[textIndex].visible = false;
         }
@@ -70,6 +86,7 @@ class TextFusion {
     }
 }
 
+// Generating random text and images
 export class TextScene extends Scene {
 
     currTime: number = 0;
@@ -84,12 +101,15 @@ export class TextScene extends Scene {
     }
 
     setup(): void {
+        // Back button
         this.container.addChild(new Button("Back", 50, 0, () => { this.game.changeScene("buttons"); }).obj);
 
+        // text and image fusion object
         this.fusion = new TextFusion();
         this.container.addChild(this.fusion.container);
     }
 
+    // random text as a number or lorem ipsum
     randText(): string {
         if (Math.random() < 0.3) {
             return (Math.floor(Math.random() * 10000) / 100).toString();
@@ -98,6 +118,7 @@ export class TextScene extends Scene {
         }
     }
 
+    // creating a random text or image from the icon list
     randMixItem(): TextMix {
         if (Math.random() < 0.5) {
             return new TextMix(false, this.randText());
@@ -106,15 +127,19 @@ export class TextScene extends Scene {
         }
     }
 
+    // creating a random list of text/image with a random length between 2 to 8 objects
     randMix(): TextMix[] {
         const num = Math.floor(Math.random() * 7 + 2);
         return new Array(num).fill(0).map(() => { return this.randMixItem(); });
     }
 
     tick(): void {
+        // every two seconds
         this.currTime += this.game.app.ticker.elapsedMS / 1000.0;
         if (this.currTime - 2 < this.lastTime) return;
         this.lastTime = this.currTime;
+
+        // showing the random text mix in the middle of the screen
         this.fusion.show(this.randMix(), Math.floor(Math.random() * 80) + 10);
         this.fusion.container.x = window.innerWidth / 2 - this.fusion.width / 2;
         this.fusion.container.y = window.innerHeight / 2 - this.fusion.container.height / 2;
